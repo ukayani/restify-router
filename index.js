@@ -1,4 +1,3 @@
 module.exports = {
-    Router: require('./lib/router'),
-    loader: require('./lib/router.loader.js')
+    Router: require('./lib/router')
 };
