@@ -3,6 +3,10 @@
   "version": "0.1.1",
   "description": "A router interface for restify that lets you aggregate route definitions and apply to a restify server",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kayaniu/restify-router.git"
+  },
   "scripts": {
     "test": "mocha"
   },
@@ -10,7 +14,7 @@
     "restify",
     "router"
   ],
-  "author": "",
+  "author": "kayaniu",
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.3.0",
