@@ -1,0 +1,35 @@
+{
+  "name": "restify-router",
+  "version": "0.1.0",
+  "description": "A router interface for restify that lets you aggregate route definitions and apply to a restify server",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "restify",
+    "router"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "gulp": "^3.9.0",
+    "gulp-istanbul": "^0.10.0",
+    "gulp-jscs": "^3.0.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-jshint-html-reporter": "^0.1.3",
+    "gulp-mocha": "^2.1.3",
+    "gulp-util": "^3.0.6",
+    "jscs-stylish": "^0.3.1",
+    "jshint-stylish": "^2.0.1",
+    "mocha": "^2.3.3",
+    "sinon": "^1.17.0",
+    "supertest": "^1.1.0"
+  },
+  "dependencies": {
+    "assert-plus": "^0.1.5",
+    "lodash": "^3.10.1",
+    "restify": "^4.0.3"
+  }
+}

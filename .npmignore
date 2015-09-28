@@ -1,0 +1,15 @@
+node_modules
+temp
+*.log
+.idea
+
+style.html
+lint.html
+.editorconfig
+gulpfile.js
+test
+.jscsrc
+.jshintrc
+
+# don't ignore .npmignore files
+!.npmignore
