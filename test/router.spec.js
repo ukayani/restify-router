@@ -44,6 +44,30 @@ describe('Restify Router', function () {
 
     });
 
+    it('Should add simple GET route with prefix to server', function (done) {
+
+      var router = new Router();
+
+      router.get('/world', function (req, res, next) {
+        res.send('Hello World');
+        next();
+      });
+
+      router.applyRoutes(server,'/hello');
+
+      request(server)
+        .get('/hello/world')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            throw err;
+          }
+          res.body.should.equal('Hello World');
+          done();
+        });
+
+    });
+
     it('Should add simple regex GET route to server', function (done) {
 
       var router = new Router();
