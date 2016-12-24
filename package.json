@@ -29,11 +29,11 @@
     "jshint-stylish": "^2.0.1",
     "mocha": "^2.3.3",
     "sinon": "^1.17.0",
-    "supertest": "^1.1.0"
+    "supertest": "^1.1.0",
+    "restify": "^4.0.3"
   },
   "dependencies": {
     "assert-plus": "^0.1.5",
-    "lodash": "^3.10.1",
-    "restify": "^4.0.3"
+    "lodash": "^3.10.1"
   }
 }
