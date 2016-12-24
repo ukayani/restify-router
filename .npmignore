@@ -10,6 +10,7 @@ gulpfile.js
 test
 .jscsrc
 .jshintrc
+.travis.yml
 coverage
 # don't ignore .npmignore files
 !.npmignore
