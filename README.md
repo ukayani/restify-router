@@ -117,3 +117,47 @@ server.listen(8080, function() {
 });
 
 ```
+
+# Common Middleware
+
+There may be times when you want to apply some common middleware to all routes registered with a router.
+For example, you may want some common authorization middleware for all routes under a specific router.
+
+All middleware registered via `.use` will be applied before route level middleware.
+
+To stay consistent with the `restify` server interface, the method on the Router is:
+
+- `.use(middlewareFn, middlewareFn2, ...)`
+- `.use([middlewareFn, middlewareFn2, ...])`
+
+**Note**: Multiple calls to `.use` will result in aggregation of middleware, each successive call will append to the list of common middleware
+
+## Example Usage
+
+```javascript
+var router = new Router();
+
+// this will run before every route on this router
+router.use(function (req, res, next) {
+   if (req.query.role === 'admin') {
+    return next();
+   } else {
+    return next(new errors.UnauthorizedError());
+   }
+});
+
+router.get('/hello', function (req, res, next) {
+   res.send('Hello');
+   next();
+});
+
+router.get('/test', function (req, res, next) {
+   res.send('Test');
+   next();
+});
+
+router.applyRoutes(server);
+
+// calling GET /hello  runs use middle ware first and then the routes middleware
+
+```
