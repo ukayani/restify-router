@@ -297,7 +297,7 @@ describe('Restify Router', function () {
 
   describe('Common middleware via .use', function () {
 
-    it('Should allow var-arg passing of middleware', function(done) {
+    it('Should allow var-arg passing of middleware', function (done) {
       var router = new Router();
 
       var first = function (req, res, next) {
@@ -331,7 +331,7 @@ describe('Restify Router', function () {
           if (err) {
             return done(err);
           }
-          res.body.should.deep.equal([1,2]);
+          res.body.should.deep.equal([1, 2]);
 
           // check /bar, should have the same response
           // TODO(uk): switch to supertest-as-promised to avoid nested callbacks
@@ -343,7 +343,7 @@ describe('Restify Router', function () {
                 return done(err);
               }
 
-              res.body.should.deep.equal([1,2]);
+              res.body.should.deep.equal([1, 2]);
               done();
             });
 
@@ -351,7 +351,7 @@ describe('Restify Router', function () {
 
     });
 
-    it('Should allow aggregation of middlewares via multiple calls to .use', function(done) {
+    it('Should allow aggregation of middlewares via multiple calls to .use', function (done) {
       var router = new Router();
 
       var first = function (req, res, next) {
@@ -381,7 +381,7 @@ describe('Restify Router', function () {
           if (err) {
             return done(err);
           }
-          res.body.should.deep.equal([1,2]);
+          res.body.should.deep.equal([1, 2]);
           done();
         });
 
