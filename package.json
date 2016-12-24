@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kayaniu/restify-router.git"
+    "url": "https://github.com/ukayani/restify-router.git"
   },
   "scripts": {
     "test": "mocha"
@@ -14,7 +14,7 @@
     "restify",
     "router"
   ],
-  "author": "kayaniu",
+  "author": "ukayani",
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.3.0",

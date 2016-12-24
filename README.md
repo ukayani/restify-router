@@ -1,5 +1,7 @@
 # Restify Router
 
+[![Build Status](https://travis-ci.org/ukayani/restify-router.svg?branch=master)](https://travis-ci.org/ukayani/restify-router)
+
 This module allows you to define your routes using a Router interface that is identical to how routes are registered
 on a restify server. You can then apply the routes to a server instance.
 
