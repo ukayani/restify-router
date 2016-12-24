@@ -36,7 +36,7 @@ describe('Restify Router', function () {
         .expect(200)
         .end(function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           res.body.should.equal('Hello World');
           done();
@@ -53,14 +53,14 @@ describe('Restify Router', function () {
         next();
       });
 
-      router.applyRoutes(server,'/hello');
+      router.applyRoutes(server, '/hello');
 
       request(server)
         .get('/hello/world')
         .expect(200)
         .end(function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           res.body.should.equal('Hello World');
           done();
@@ -84,7 +84,7 @@ describe('Restify Router', function () {
         .expect(200)
         .end(function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           res.body.should.equal('hello-test');
           done();
@@ -110,7 +110,7 @@ describe('Restify Router', function () {
         .expect(200)
         .end(function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           res.body.should.equal('test');
           done();
@@ -135,7 +135,7 @@ describe('Restify Router', function () {
         .expect(200)
         .end(function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           res.body.should.equal('test');
           done();
@@ -158,7 +158,7 @@ describe('Restify Router', function () {
         .expect(200)
         .end(function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           res.body.should.equal('2');
           done();
@@ -183,7 +183,7 @@ describe('Restify Router', function () {
         .expect(200)
         .end(function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           res.body.should.equal('test');
           done();
@@ -235,7 +235,10 @@ describe('Restify Router', function () {
     it('Should add a named route', function (done) {
       var router = new Router();
 
-      router.get({name: 'hello', path: '/hello'}, function (req, res, next) {
+      router.get({
+        name: 'hello',
+        path: '/hello'
+      }, function (req, res, next) {
         res.send('Hello World');
         next();
       });
@@ -247,7 +250,7 @@ describe('Restify Router', function () {
         .expect(200)
         .end(function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           res.body.should.equal('Hello World');
           done();
@@ -258,12 +261,18 @@ describe('Restify Router', function () {
     it('Should add versioned routes', function (done) {
       var router = new Router();
 
-      router.get({path: '/hello', version: '1.0.0'}, function (req, res, next) {
+      router.get({
+        path: '/hello',
+        version: '1.0.0'
+      }, function (req, res, next) {
         res.send('1.0.0');
         next();
       });
 
-      router.get({path: '/hello', version: '2.0.0'}, function (req, res, next) {
+      router.get({
+        path: '/hello',
+        version: '2.0.0'
+      }, function (req, res, next) {
         res.send('2.0.0');
         next();
       });
@@ -276,9 +285,103 @@ describe('Restify Router', function () {
         .expect(200)
         .end(function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           res.body.should.equal('2.0.0');
+          done();
+        });
+
+    });
+
+  });
+
+  describe('Common middleware via .use', function () {
+
+    it('Should allow var-arg passing of middleware', function(done) {
+      var router = new Router();
+
+      var first = function (req, res, next) {
+        req.test = [1];
+        next();
+      };
+
+      var second = function (req, res, next) {
+        req.test.push(2);
+        next();
+      };
+
+      router.get('/foo', function (req, res, next) {
+        res.send(req.test);
+        next();
+      });
+
+      router.get('/bar', function (req, res, next) {
+        res.send(req.test);
+        next();
+      });
+
+      router.use(first, second);
+
+      router.applyRoutes(server);
+
+      request(server)
+        .get('/foo')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
+          res.body.should.deep.equal([1,2]);
+
+          // check /bar, should have the same response
+          // TODO(uk): switch to supertest-as-promised to avoid nested callbacks
+          request(server)
+            .get('/bar')
+            .expect(200)
+            .end(function (err, res) {
+              if (err) {
+                return done(err);
+              }
+
+              res.body.should.deep.equal([1,2]);
+              done();
+            });
+
+        });
+
+    });
+
+    it('Should allow aggregation of middlewares via multiple calls to .use', function(done) {
+      var router = new Router();
+
+      var first = function (req, res, next) {
+        req.test = [1];
+        next();
+      };
+
+      var second = function (req, res, next) {
+        req.test.push(2);
+        next();
+      };
+
+      router.get('/foo', function (req, res, next) {
+        res.send(req.test);
+        next();
+      });
+
+      router.use(first);
+      router.use(second);
+
+      router.applyRoutes(server);
+
+      request(server)
+        .get('/foo')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
+          res.body.should.deep.equal([1,2]);
           done();
         });
 
