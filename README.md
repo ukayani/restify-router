@@ -161,3 +161,7 @@ router.applyRoutes(server);
 // calling GET /hello  runs use middle ware first and then the routes middleware
 
 ```
+
+# Links
+
+For more information about Restify Router see [Organizing Restify Routes with Restify Router](http://recursivethoughts.com/organizing-restify-routes-with-restify-router/)
