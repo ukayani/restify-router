@@ -118,6 +118,61 @@ server.listen(8080, function() {
 
 ```
 
+# Nesting Routers
+
+If you are familiar with Express style routers, you have the ability to nest routers under
+other routers to create a hierarchy of route definitions.
+
+To nest routers use the `.add` method on a Router:
+
+```javascript
+router.add(path, router);
+```
+
+- path - a string path beginning with a forward slash (/)
+    - All routes defined in the provided router will be prefixed with this path during registration
+- router - the router instance to nest
+
+## Example Usage
+
+```javascript
+// routes/v1/auth.js
+
+const router = new Router();
+router.post("/register", function (req, res, next) {
+ // do something with req.body
+ res.send({status: 'success'});
+ return next();
+});
+
+module.exports = router;
+```
+
+```javascript
+// routes/v1/routes.js
+
+const router = new Router();
+router.add("/auth", require("./auth"));
+
+module.exports = router;
+```
+
+```javascript
+// routes/routes.js
+
+const router = new Router();
+router.add("/v1", require("./v1/routes"));
+
+module.exports = router;
+```
+
+With the above router definition from `routes/routes.js` we can do the following call:
+
+`POST /v1/auth/register`
+
+This call is possible because we have nested routers two levels deep from the `/v1` path.
+
+
 # Common Middleware
 
 There may be times when you want to apply some common middleware to all routes registered with a router.

@@ -389,7 +389,68 @@ describe('Restify Router', function () {
 
   });
 
-  describe('Failure cases', function () {
+  describe('Nested routers via .add', function () {
+    it('Should allow arbitrary nesting of routers', function (done) {
+      var v1 = new Router();
+      var auth = new Router();
+      var register = new Router();
+
+      register.post('/register', function (req, res, next) {
+        res.send({status: 'success', name: req.body.name});
+        return next();
+      });
+
+      auth.add('/auth', register);
+      v1.add('/v1', auth);
+
+      v1.applyRoutes(server);
+
+      request(server)
+        .post('/v1/auth/register')
+        .set('Content-Type', 'application/json')
+        .send({name: 'test'})
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
+
+          res.body.should.deep.equal({status: 'success', name: 'test'});
+          done();
+        });
+
+    });
+
+    it('Should fail if invalid path type is provided for router', function () {
+
+      function fail() {
+        var router = new Router();
+        var nested = new Router();
+
+        router.add({}, nested);
+      }
+
+      /* jshint ignore:start */
+      expect(fail).to.throw('path (string) required');
+      /* jshint ignore:end */
+    });
+
+    it('Should fail if router object specified is not of type Router', function () {
+
+      function fail() {
+        var router = new Router();
+
+        router.add('/foo', function (req, res, next) {});
+      }
+
+      /* jshint ignore:start */
+      expect(fail).to.throw('router (Router) required');
+      /* jshint ignore:end */
+    });
+
+  });
+
+  describe('Common failure cases', function () {
 
     it('Should fail if invalid path type is provided', function () {
 
