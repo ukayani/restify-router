@@ -4,7 +4,6 @@ var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var jshint = require('gulp-jshint');
-var _ = require('lodash');
 var jscs = require('gulp-jscs');
 var gutil = require('gulp-util');
 var stylishJshint = require('jshint-stylish');
