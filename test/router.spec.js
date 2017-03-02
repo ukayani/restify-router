@@ -476,9 +476,9 @@ describe('Restify Router', function () {
         return next();
       });
 
-      auth.use(second, third)
+      auth.use(second, third);
       auth.add('/auth', register);
-      v1.use(first)
+      v1.use(first);
       v1.add('/v1', auth);
 
       v1.applyRoutes(server);
