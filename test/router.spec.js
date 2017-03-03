@@ -450,6 +450,60 @@ describe('Restify Router', function () {
 
   });
 
+  describe('Nested routers via .add should process middlewares in order', function () {
+    it('Should process middlewares in order', function (done) {
+      var v1 = new Router();
+      var auth = new Router();
+      var register = new Router();
+
+      var first = function (req, res, next) {
+        if (req.test && req.test.constructor === Array) {
+          req.test.push(1);
+        } else {
+          req.test = [1];
+        }
+        next();
+      };
+
+      var second = function (req, res, next) {
+        req.test.push(2);
+        next();
+      };
+
+      var third = function (req, res, next) {
+        req.test.push(3);
+        next();
+      };
+
+      register.post('/register', function (req, res, next) {
+        res.send({status: 'success', name: req.body.name, commonHandlerInjectedValues: req.test});
+        return next();
+      });
+
+      auth.use(second, third);
+      auth.add('/auth', register);
+      v1.use(first);
+      v1.add('/v1', auth);
+
+      v1.applyRoutes(server);
+
+      request(server)
+        .post('/v1/auth/register')
+        .set('Content-Type', 'application/json')
+        .send({name: 'test'})
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
+
+          res.body.should.deep.equal({status: 'success', name: 'test', commonHandlerInjectedValues: [1,2,3]});
+          done();
+        });
+
+    });
+  });
+
   describe('Common failure cases', function () {
 
     it('Should fail if invalid path type is provided', function () {
