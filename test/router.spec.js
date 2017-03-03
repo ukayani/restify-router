@@ -457,7 +457,11 @@ describe('Restify Router', function () {
       var register = new Router();
 
       var first = function (req, res, next) {
-        req.test = [1];
+        if (req.test && req.test.constructor === Array) {
+          req.test.push(1);
+        } else {
+          req.test = [1];
+        }
         next();
       };
 
