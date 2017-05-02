@@ -92,6 +92,27 @@ describe('Restify Router', function () {
 
     });
 
+    it('Should add a regex GET route to server when route prefixes are in use', function (done) {
+      var router = new Router();
+
+      router.get(/^\/([a-zA-Z0-9_\.~-]+)\/(.*)/, function (req, res, next) {
+        res.send(req.params[0] + '-' + req.params[1]);
+        next();
+      });
+
+      router.applyRoutes(server, '/nested/example');
+      request(server)
+        .get('/nested/example/hello/test')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
+          res.body.should.equal('hello-test');
+          done();
+        });
+    });
+
     it('Should add simple POST route to server', function (done) {
 
       var router = new Router();
