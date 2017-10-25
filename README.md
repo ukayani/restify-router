@@ -80,6 +80,8 @@ server.listen(8080, function() {
 
 To prefix all routes, specify the prefix as the second argument to `router.applyRoutes(server, prefix)`
 
+- `prefix` must be a string or a regex
+
 Example:
 
 Routes:
@@ -129,7 +131,7 @@ To nest routers use the `.add` method on a Router:
 router.add(path, router);
 ```
 
-- path - a string path beginning with a forward slash (/)
+- path - a string or regexp path beginning with a forward slash (/)
     - All routes defined in the provided router will be prefixed with this path during registration
 - router - the router instance to nest
 

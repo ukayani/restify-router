@@ -92,6 +92,52 @@ describe('Restify Router', function () {
 
     });
 
+    it('Should add simple regex GET route to server with prefix', function (done) {
+
+      var router = new Router();
+
+      router.get(/^\/foo+/, function (req, res, next) {
+        res.send(200);
+        next();
+      });
+
+      router.applyRoutes(server, '/test');
+
+      request(server)
+        .get('/test/foooo')
+        .expect(200)
+        .end(function (err) {
+          if (err) {
+            return done(err);
+          }
+          done();
+        });
+
+    });
+
+    it('Should add simple regex GET route to server with regex prefix', function (done) {
+
+      var router = new Router();
+
+      router.get(/^\/ba+r/, function (req, res, next) {
+        res.send(200);
+        next();
+      });
+
+      router.applyRoutes(server, /\/foo+/);
+
+      request(server)
+        .get('/foooo/baaaar')
+        .expect(200)
+        .end(function (err) {
+          if (err) {
+            return done(err);
+          }
+          done();
+        });
+
+    });
+
     it('Should add simple POST route to server', function (done) {
 
       var router = new Router();
@@ -396,7 +442,10 @@ describe('Restify Router', function () {
       var register = new Router();
 
       register.post('/register', function (req, res, next) {
-        res.send({status: 'success', name: req.body.name});
+        res.send({
+          status: 'success',
+          name: req.body.name
+        });
         return next();
       });
 
@@ -415,7 +464,37 @@ describe('Restify Router', function () {
             return done(err);
           }
 
-          res.body.should.deep.equal({status: 'success', name: 'test'});
+          res.body.should.deep.equal({
+            status: 'success',
+            name: 'test'
+          });
+          done();
+        });
+
+    });
+
+    it('Should allow nesting routers using regex paths', function (done) {
+      var foo = new Router();
+      var bar = new Router();
+      var bam = new Router();
+
+      bam.get('/bam', function (req, res, next) {
+        res.send(200);
+        return next();
+      });
+
+      bar.add(/^\/ba+r/, bam);
+      foo.add(/^\/foo+/, bar);
+
+      foo.applyRoutes(server);
+
+      request(server)
+        .get('/fooo/baar/bam')
+        .expect(200)
+        .end(function (err) {
+          if (err) {
+            return done(err);
+          }
           done();
         });
 
@@ -431,7 +510,7 @@ describe('Restify Router', function () {
       }
 
       /* jshint ignore:start */
-      expect(fail).to.throw('path (string) required');
+      expect(fail).to.throw('path (string|regexp) required');
       /* jshint ignore:end */
     });
 
@@ -440,7 +519,8 @@ describe('Restify Router', function () {
       function fail() {
         var router = new Router();
 
-        router.add('/foo', function (req, res, next) {});
+        router.add('/foo', function (req, res, next) {
+        });
       }
 
       /* jshint ignore:start */
@@ -476,7 +556,11 @@ describe('Restify Router', function () {
       };
 
       register.post('/register', function (req, res, next) {
-        res.send({status: 'success', name: req.body.name, commonHandlerInjectedValues: req.test});
+        res.send({
+          status: 'success',
+          name: req.body.name,
+          commonHandlerInjectedValues: req.test
+        });
         return next();
       });
 
@@ -497,7 +581,11 @@ describe('Restify Router', function () {
             return done(err);
           }
 
-          res.body.should.deep.equal({status: 'success', name: 'test', commonHandlerInjectedValues: [1,2,3]});
+          res.body.should.deep.equal({
+            status: 'success',
+            name: 'test',
+            commonHandlerInjectedValues: [1, 2, 3]
+          });
           done();
         });
 
