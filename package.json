@@ -1,6 +1,6 @@
 {
   "name": "restify-router",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "A router interface for restify that lets you aggregate route definitions and apply to a restify server",
   "main": "index.js",
   "repository": {
