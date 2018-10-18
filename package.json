@@ -17,6 +17,7 @@
   "author": "ukayani",
   "license": "ISC",
   "devDependencies": {
+    "@types/restify": "^7.2.5",
     "chai": "^3.3.0",
     "gulp": "^3.9.0",
     "gulp-istanbul": "^0.10.0",
@@ -28,11 +29,12 @@
     "jscs-stylish": "^0.3.1",
     "jshint-stylish": "^2.0.1",
     "mocha": "^2.3.3",
+    "restify": "^4.0.3",
     "sinon": "^1.17.0",
-    "supertest": "^1.1.0",
-    "restify": "^4.0.3"
+    "supertest": "^1.1.0"
   },
   "dependencies": {
     "assert-plus": "^0.1.5"
-  }
+  },
+  "types": "./types/restify-router/index.d.ts"
 }
