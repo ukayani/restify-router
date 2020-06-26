@@ -613,7 +613,7 @@ describe('Restify Router', function () {
       request(server)
         .post('/v1/auth/register')
         .set('Content-Type', 'application/json')
-        .send({ name: 'test' })
+        .send({name: 'test'})
         .expect(200)
         .end(function (err, res) {
           if (err) {
@@ -716,7 +716,7 @@ describe('Restify Router', function () {
       request(server)
         .post('/v1/auth/register')
         .set('Content-Type', 'application/json')
-        .send({ name: 'test' })
+        .send({name: 'test'})
         .expect(200)
         .end(function (err, res) {
           if (err) {
@@ -784,7 +784,7 @@ describe('Restify Router', function () {
       request(server)
         .post('/v1/auth/register')
         .set('Content-Type', 'application/json')
-        .send({ name: 'test' })
+        .send({name: 'test'})
         .expect(200)
         .end(function (err, res) {
           if (err) {

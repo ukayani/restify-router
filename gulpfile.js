@@ -50,4 +50,4 @@ gulp.task('lint', function () {
     .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('default', ['test', 'lint', 'style']);
+// gulp.task('default', ['test', 'lint', 'style']);
