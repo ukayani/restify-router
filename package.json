@@ -17,7 +17,7 @@
   "author": "ukayani",
   "license": "ISC",
   "devDependencies": {
-    "@types/restify": "^7.2.5",
+    "@types/restify": "^7.2.12",
     "chai": "^3.3.0",
     "gulp": "^4.0.0",
     "gulp-istanbul": "^1.1.3",

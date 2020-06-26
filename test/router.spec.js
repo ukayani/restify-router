@@ -592,6 +592,216 @@ describe('Restify Router', function () {
     });
   });
 
+  describe('Nested routers via .group', function () {
+    it('Should allow arbitrary nesting of routers', function (done) {
+      var router = new Router();
+
+      router.group('/v1', function (router) {
+        router.group('/auth', function (router) {
+          router.post('/register', function (req, res, next) {
+            res.send({
+              status: 'success',
+              name: req.body.name
+            });
+            return next();
+          });
+        });
+      });
+
+      router.applyRoutes(server);
+
+      request(server)
+        .post('/v1/auth/register')
+        .set('Content-Type', 'application/json')
+        .send({ name: 'test' })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
+
+          res.body.should.deep.equal({
+            status: 'success',
+            name: 'test'
+          });
+          done();
+        });
+
+    });
+
+    it('Should allow nesting routers using regex paths', function (done) {
+      var router = new Router();
+
+      router.group(/^\/foo+/, function (router) {
+        router.group(/^\/ba+r/, function (router) {
+          router.get('/bam', function (req, res, next) {
+            res.send(200);
+            return next();
+          });
+        });
+      });
+
+      router.applyRoutes(server);
+
+      request(server)
+        .get('/fooo/baar/bam')
+        .expect(200)
+        .end(function (err) {
+          if (err) {
+            return done(err);
+          }
+          done();
+        });
+
+    });
+
+    it('Should fail if invalid path type is provided for router', function () {
+
+      function fail() {
+        var router = new Router();
+        var nested = new Router();
+
+        router.group({}, function (router) {
+          router.get('/bam', function (req, res, next) {
+            res.send(200);
+            return next();
+          });
+        });
+      }
+
+      /* jshint ignore:start */
+      expect(fail).to.throw('group (path) required');
+      /* jshint ignore:end */
+    });
+  });
+
+  describe('Nested routers via .group should process middlewares in order', function () {
+    it('Should process middlewares in order', function (done) {
+      var router = new Router();
+
+      var first = function (req, res, next) {
+        if (req.test && req.test.constructor === Array) {
+          req.test.push(1);
+        } else {
+          req.test = [1];
+        }
+        next();
+      };
+
+      var second = function (req, res, next) {
+        req.test.push(2);
+        next();
+      };
+
+      var third = function (req, res, next) {
+        req.test.push(3);
+        next();
+      };
+
+      router.group('/v1', first, function (router) {
+        router.group('/auth', second, third, function (router) {
+          router.post('/register', function (req, res, next) {
+            res.send({
+              status: 'success',
+              name: req.body.name,
+              commonHandlerInjectedValues: req.test
+            });
+            return next();
+          });
+        });
+      });
+
+      router.applyRoutes(server);
+
+      request(server)
+        .post('/v1/auth/register')
+        .set('Content-Type', 'application/json')
+        .send({ name: 'test' })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
+
+          res.body.should.deep.equal({
+            status: 'success',
+            name: 'test',
+            commonHandlerInjectedValues: [1, 2, 3]
+          });
+          done();
+        });
+
+    });
+
+    it('Should process middlewares with common middleware in order', function (done) {
+      var router = new Router();
+
+      var common = function (req, res, next) {
+        if (req.test && req.test.constructor === Array) {
+          req.test.push(0);
+        } else {
+          req.test = [0];
+        }
+        next();
+      };
+
+      var first = function (req, res, next) {
+        if (req.test && req.test.constructor === Array) {
+          req.test.push(1);
+        } else {
+          req.test = [1];
+        }
+        next();
+      };
+
+      var second = function (req, res, next) {
+        req.test.push(2);
+        next();
+      };
+
+      var third = function (req, res, next) {
+        req.test.push(3);
+        next();
+      };
+
+      router.use(common);
+
+      router.group('/v1', first, function (router) {
+        router.group('/auth', second, third, function (router) {
+          router.post('/register', function (req, res, next) {
+            res.send({
+              status: 'success',
+              name: req.body.name,
+              commonHandlerInjectedValues: req.test
+            });
+            return next();
+          });
+        });
+      });
+
+      router.applyRoutes(server);
+
+      request(server)
+        .post('/v1/auth/register')
+        .set('Content-Type', 'application/json')
+        .send({ name: 'test' })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
+
+          res.body.should.deep.equal({
+            status: 'success',
+            name: 'test',
+            commonHandlerInjectedValues: [0, 1, 2, 3]
+          });
+          done();
+        });
+
+    });
+  });
+
   describe('Common failure cases', function () {
 
     it('Should fail if invalid path type is provided', function () {
