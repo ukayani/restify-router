@@ -3,12 +3,16 @@
   "version": "0.5.1",
   "description": "A router interface for restify that lets you aggregate route definitions and apply to a restify server",
   "main": "index.js",
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ukayani/restify-router.git"
   },
   "scripts": {
-    "test": "c8 mocha",
+    "test": "c8 mocha && c8 check-coverage --lines 95",
+    "clean": "rm -rf coverage",
     "lint": "eslint 'lib/*.js'",
     "fix": "eslint --fix 'lib/*.js'"
   },
