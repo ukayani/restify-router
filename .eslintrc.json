@@ -1,0 +1,144 @@
+{
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "globals": {},
+  "rules": {
+    "no-debugger": 0,
+    "strict": 0,
+    "semi": 0,
+    "linebreak-style": [
+      2,
+      "unix"
+    ],
+    "no-bitwise": 0,
+    "no-cond-assign": [
+      2,
+      "except-parens"
+    ],
+    "curly": [
+      2,
+      "all"
+    ],
+    "eqeqeq": 2,
+    "no-eq-null": 0,
+    "no-eval": 0,
+    "no-unused-expressions": 2,
+    "guard-for-in": 0,
+    "wrap-iife": 2,
+    "no-use-before-define": [
+      2,
+      {
+        "functions": false
+      }
+    ],
+    "no-loop-func": 0,
+    "no-caller": 0,
+    "no-script-url": 0,
+    "no-shadow": 2,
+    "no-new-func": 0,
+    "no-new-wrappers": 0,
+    "no-undef": 2,
+    "no-invalid-this": 0,
+    "no-proto": 0,
+    "no-multi-str": 0,
+    "comma-style": [
+      2,
+      "last"
+    ],
+    "no-iterator": 0,
+    "block-scoped-var": 2,
+    "new-cap": 0,
+    "no-empty": [
+      2,
+      {
+        "allowEmptyCatch": true
+      }
+    ],
+    "no-new": 0,
+    "no-plusplus": 0,
+    "dot-notation": 2,
+    "indent": [
+      2,
+      4,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "max-params": [
+      2,
+      5
+    ],
+    "max-depth": [
+      2,
+      5
+    ],
+    "max-statements": [
+      2,
+      50
+    ],
+    "complexity": [
+      2,
+      10
+    ],
+    "keyword-spacing": [
+      2,
+      {}
+    ],
+    "array-bracket-spacing": [
+      2,
+      "never",
+      {
+        "singleValue": true
+      }
+    ],
+    "space-in-parens": [
+      2,
+      "never"
+    ],
+    "quote-props": [
+      2,
+      "as-needed",
+      {
+        "keywords": true
+      }
+    ],
+    "operator-linebreak": [
+      2,
+      "after"
+    ],
+    "space-unary-ops": [
+      2,
+      {
+        "words": false,
+        "nonwords": false
+      }
+    ],
+    "space-infix-ops": 2,
+    "no-with": 2,
+    "no-multiple-empty-lines": 2,
+    "quotes": [
+      2,
+      "single"
+    ],
+    "no-mixed-spaces-and-tabs": 2,
+    "no-trailing-spaces": 2,
+    "brace-style": [
+      2,
+      "1tbs",
+      {
+        "allowSingleLine": true
+      }
+    ],
+    "eol-last": 2,
+    "max-len": [
+      2,
+      120
+    ],
+    "space-before-function-paren": [
+      2,
+      "always"
+    ]
+  }
+}
