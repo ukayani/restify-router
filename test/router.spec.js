@@ -659,7 +659,6 @@ describe('Restify Router', function () {
 
       function fail() {
         var router = new Router();
-        var nested = new Router();
 
         router.group({}, function (router) {
           router.get('/bam', function (req, res, next) {
