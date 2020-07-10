@@ -25,9 +25,26 @@ declare module 'restify-router' {
     opts: Array<Route>;
   }
 
+  export type GroupHandler = (router: Router) => void;
+
+  export type GroupHandlerType = GroupHandler | RequestHandler | RequestHandler[];
+
   export class Router {
 
     routes: RouteCollection;
+
+    groupPrefix?: string;
+
+    groupMiddlewares?: RequestHandler[];
+
+    /**
+     * Mounts a chain on the given path against this HTTP verb
+     *
+     * @param   opts if string, the URL to handle.
+     *                                 if options, the URL to handle, at minimum.
+     * @returns                the newly created route.
+     */
+    group(path: string | RegExp | RouteOptions, ...handlers: GroupHandlerType[]): void;
 
     /**
      * Mounts a chain on the given path against this HTTP verb

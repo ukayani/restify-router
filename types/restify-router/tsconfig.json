@@ -17,6 +17,7 @@
     },
     "files": [
         "index.d.ts",
-        "restify-router-tests.ts"
+        "restify-router-tests.ts",
+        "restify-router-group-tests.ts"
     ]
 }
