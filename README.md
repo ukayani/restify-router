@@ -8,6 +8,18 @@ on a restify server. You can then apply the routes to a server instance.
 Borrowing from the idea of Express router where you can organize routes by creating multiple routers and applying them
 to an express server, this component allows you to achieve a similar separation/grouping of route definitions.
 
+## Summary
+- [Installation](#installation)
+  - [Creating a router](#creating-a-router)
+  - [Why use it?](#why-use-it)
+- [Prefixing Routes](#prefixing-routes)
+- [Nesting Routers](#nesting-routers)
+  - [Example Usage](#example-usage)
+- [Grouping Routers](#grouping-routers)
+  - [Example Usage](#basic-usage)
+  - [Example Usage with middleware](#basic-usage-with-nesting-middlewares)
+- [Common Middleware](#common-middleware)
+
 # Installation
 
 ```bash
@@ -174,6 +186,109 @@ With the above router definition from `routes/routes.js` we can do the following
 
 This call is possible because we have nested routers two levels deep from the `/v1` path.
 
+
+# Grouping Routers
+
+As an alternative to Nesting Routers, you can use the group to clarify the middlewares manipulation and the routes / files organization.
+Works in a way that does not need to create multiple instances of the Router like Nesting.
+
+To group routers use the `.group` method on a Router:
+
+```javascript
+router.group(path, callback);
+```
+
+## Example Usage
+
+### Basic Usage
+
+```javascript
+var Router = require('restify-router').Router;
+var restify = require('restify');
+
+var routerInstance = new  Router();
+var server = restify.createServer();
+
+routerInstance.get('/', function (req, res, next) {
+  res.send({message: 'home'});
+  return next();
+});
+
+routerInstance.group('/v1', function (router) {
+  router.get('/', function (req, res, next) {
+    res.send({message: 'home V1'});
+    return next();
+  });
+
+  router.group('/auth', function (router) {
+    router.post('/register', function (req, res, next) {
+      res.send({message: 'success (v1)'});
+      return next();
+    });
+  });
+});
+
+routerInstance.group('/v2', function (router) {
+  router.get('/', function (req, res, next) {
+    res.send({message: 'home V2'});
+    return next();
+  });
+});
+
+// add all routes registered in the router to this server instance
+routerInstance.applyRoutes(server);
+
+server.listen(8081, function() {
+  console.log('%s listening at %s', server.name, server.url);
+});
+```
+
+With the above code definition we can do the following calls:
+
+- GET `/`
+- GET `/v1`
+- POST `/v1/auth/register`
+- GET `/v2`
+
+### Basic Usage with nesting Middlewares
+
+```javascript
+var Router = require('restify-router').Router;
+var restify = require('restify');
+
+var routerInstance = new  Router();
+var server = restify.createServer();
+
+function midFirst(req, res, next) { /**/ }
+function midSecond(req, res, next) { /**/ }
+function midThird(req, res, next) { /**/ }
+
+routerInstance.group('/v1', midFirst, function (router) {
+  router.get('/', function (req, res, next) {
+    res.send({message: 'home V1'});
+    return next();
+  });
+
+  router.group('/auth', midSecond, function (router) {
+    router.post('/register', midThird, function (req, res, next) {
+      res.send({message: 'success (v1)'});
+      return next();
+    });
+  });
+});
+
+// add all routes registered in the router to this server instance
+routerInstance.applyRoutes(server);
+
+server.listen(8081, function() {
+  console.log('%s listening at %s', server.name, server.url);
+});
+```
+
+With the above code definition we can do the following calls:
+
+- GET `/v1 [midFirst]`
+- POST `/v1/auth/register [midFirst, midSecond, midThird]`
 
 # Common Middleware
 
