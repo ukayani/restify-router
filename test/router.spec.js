@@ -597,6 +597,7 @@ describe('Restify Router', function () {
       var router = new Router();
 
       router.group('/v1', function (router) {
+        router.group('/somethingelse', function (router) {})
         router.group('/auth', function (router) {
           router.post('/register', function (req, res, next) {
             res.send({
@@ -698,6 +699,7 @@ describe('Restify Router', function () {
       };
 
       router.group('/v1', first, function (router) {
+        router.group('/somethingelse', function (router) {})
         router.group('/auth', second, third, function (router) {
           router.post('/register', function (req, res, next) {
             res.send({
